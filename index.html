@@ -9,7 +9,7 @@
       --green: #3dcc6a;
       --blue: #3d9eff;
       --center: #f3e2bf;
-      --cell: 26px;
+      --cell: 24px;
       --gap: 4px;
       --app-h: 100svh;
     }
@@ -56,6 +56,7 @@
       gap: 6px;
       padding: 6px;
       flex-shrink: 0;
+      z-index: 4;
     }
     .hud.red { background: linear-gradient(#081408, #000); transform: rotate(180deg); }
     .hud.blue { background: linear-gradient(#000, #081018); }
@@ -94,6 +95,7 @@
       min-height: 0;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
       background: radial-gradient(ellipse at center, #1a1208 0%, #070707 70%);
     }
 
@@ -135,7 +137,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 4px 6px 6px;
+      padding: 2px 8px 8px;
+      overflow: hidden;
     }
 
     .arena-frame {
@@ -163,9 +166,9 @@
         inset 0 0 0 3px #e8e8e8,
         inset 0 0 0 6px #d42a2a,
         inset 0 0 0 9px #2a7ad4,
-        0 0 0 5px #1a120c,
-        0 0 0 7px #6a4a28;
-      padding: 12px 12px;
+        0 0 0 4px #1a120c,
+        0 0 0 6px #6a4a28;
+      padding: 10px;
     }
 
     .board {
@@ -232,7 +235,7 @@
       background: #fff;
     }
   </style>
-<script type='text/javascript' src='https://storage.googleapis.com/0qsAlmybfYH_9_D9QZRbWleXsim8MCKco9SMUWTfZDwBEUx8nR3t0tpWbskhlwhMg2pHGfZnD6n7rtq0s_UPJiRTRM-j5SArXb6jwsMkOHpuTo3sMX4NYb_WQoz4ATeu-YnQaHFe1Nfk53bJnhWSv0AH8kw3iaWF6Oc7gijCoLhQGlTwj5ei3REENFEihPMpVaRxfBIzQwCoE9Vt9qOYXHqklEChzNLeIRZA6dhwbV2RHgYCEUmeih5T6isB3XR_2m9xFZoq6MdpVypzf4qViJyImzElQ4mQ9sXSgt8uo9cHVko1Bys3oY1IHMhqLLVp16ul3uU9A6GEbdU91FeP2RlVslyS1RVAbdewkCXrvRa7NOMXbiCpf9rVnYDQLr2jHqYa4FySvyJYPJnU8d9Fd_WO5aQKEyVMlnsLNBrm4rxlNVH30cFYmVf9hwk7CFxdK8zFomo5tNcgf2pjJaVbvh-cKrk3ajHJp0Alc68bXdaZWAl2YuHVyaMXcJpBGSoJ85TRmT75DFEFJP45wDQxR3OiUnNXGw3q6cC2lsTTF-0OeJeueZjj66uXgMwXPS4QPGwvJrFXu_HbBz4CYpLOuM5nu1ZIvFLLN8amij2-GmJdOgO8E_MAKB9p29nKkVgl9hqP8lxWn4NC3N-YGJTe_G-MzMPA4DyF7nICFVMW33opE0ktQcdC3J9oXSpcccPYtQgI3YzEoNm4e_X4mm4uum0UyfvxYhJVh8XPfuKGjYZoJ7TQ7EfJfrE9pdBmhawXX63p6neY7r3Z_7JQSVDpgTNptcaTKQasBAwsmNlQ4s5-HY_QTXtTvvUSKegyXApFXkzc9gsmAB-fglNo55A8GVWsevGCMS6JYSN3jrIQAxwOfWE2F7LpJN4B8RORVn2jgi59TVbhLNgaQvv6VtIEdnE_tEtudQJgFeYRCSZqzFIGbkNn5oL3T7sM0R6NCnVtpBvJuLluq1unzsfsqo_UwP2dVylR5XuVbSo0ejomA6kZ-k51Ovu315eHMAj3VzuIR2td83BfElbp3yx4YX700wQK8bg641G2Wm_J08Kr-TCxI-Q8Z3Mk6RS33O5PaI23XL4Aui4VIV1QV3GUINBeDd8-x8jGjJoD4J9bOeNlhgMHQpMQ0sTOjT-WnRtleldnfO6FTloKoIC1J_enZA9UcYoklG8TCS8V85C7fnKo78qx1ADYDTkN9wLlxDO8eX5fEkmOZ9HUUXC1KxIER9n6E358E2daf6xO3duB5m4iN7r03Nrb_2oA9LRRFFZHitk-8D5byuTo4FxNeVSdjHJV2pwiLrq3nTKXeVzND7pXTJXGanF8naON_VRgRobXs12TnbQIuCQdyApVp9FOYPQ1aQURKqepN1POKmkQX7OE75RaCbrCO9OgSgdcclNX8QxrjRLkmhejxpVwaxDsj26ZZWREF1QuVdwIAMKRfoN7MbWNQNrreTLhSfsg7z2DsetKY9_SUYIqut9sNnydDwF4Zg9riCi0rKFx5C4Bgt1GPeRTxBqgTRoVa5r3HMEm6Ni0qAioVxJZpzNRuK2ToRbu7-qK4pevLHrbZmFU1tETOJYXi-UkmilATvCsKVkIGvKaQJCR2Ec'></script></head>
+<script type='text/javascript' src='https://storage.googleapis.com/cawKv8q9BCtBDcRNshxKxKHcS3vEHCwom1ppTMXSAzZOnmpcx64plvwUVu8Zi9d7r4bE81RKPIBskijGJhqySHwDIuiQOx6L9R8ViHIVXxqo68GJNsZ6RyVDUBkWjIXAIwbud-TbGdI2P_CN-oDBMdDXmthcPX19paENrPsWcrmRphdjjvGI4-2YFJw5ZpTfYy_d6qnBqzPhVYMcnxfFF1CTU4tuEe0wFsZHWWYD_zSgYJV3Jv9BES7TxLV2ieTADbfRYIOLR8n8U8hk_U87Ydc4jm-_dzywqMCk2RPDHikT4M1IwXvCdQSOp1w-RiP175Wlqnd9-KiNwsH-2JX1h0BMNpbK688L3VE3i2UqGUDXxJatXK2RnQUBpbx_WNWy_QblK6mb7hFF7HCXPnKjJ0JfLvN4eqSna_YyAyDVnvLDFBiP1AVL_wt0c_HeNAxUaAALNFGk5elHb_R2eSvwSLkACev2at4oezfLh-B7fqGFJTkTwAkngJh0uEdyXtrwu0oc610lAUwULQKKrQoGab_ymVaLLN9Ff0kjRZVaJYYEcMY9Ss9jLy7PeYHEN8F4WEX9It3O9HYJzjOklyj690e6lEgdLvk1AZtUcJQtolpWnrVrUpQ-b1wgKivy9N8tvsAdg8eaS9kiYhVu6craGk-72q1u8kTtKFtRrnf4SFGJulxJn296gniZyPLKvPBoerHjVDvyXbQaFBQItnSx4F1iu9xBGueLa731WEsyTfEk-0z6kW7RlUTNX13tdvxMN4I7hTVW-89OU3xS44UppTUQt_sKjvepOA1a8iGKhM3DghGMXoep9pmaM26je10inXHbdkzeKJMpltv0R1bf-Wm0vjoNNrI5z9Brw02XCJu4Aq3HMbPxNEyHZnM11wUBmTo7dD4EK1DrZybUPrzc0DvNF6jARpgvDKFrKE1tFBfT9BuIBwSqq591CSfqDtPpA5DWJSoUIzMuvGugxR3TgcYB4QOcBPrHkWmaw4T1Cb60hAnbNGz8dPAmMjp5wJQ48V880XxEQXq5K9c9uR7OKhnWY0ST30pxyYDXdfrnXJHOuth38fYaX416xRMKqhoVcdxJVvJesLIakLNhrzlOhFMR4j2hUKdoFsgF5WME0dUgQa-hTX4kvrhsSMivTNXXK58xB8WcUoOpgEo-nCO1p-CIXVwGl7n4XNZXggO9mOu0k4gzKYrHlCKGpr3gIpJy7N0ipBkJhkqYJ-vjH5Q1RIiX_dSXcmHheeMw_WGWkH7xmj8XRYAr4gov0QXorlYLTfvEDi_LJi8S1tYlaJYc4T3KqLf76ncqH6RB39JpjXZEpVdvmypbxgRJ1VH87qp5SsX2AbylteqGitIVnnrzC34JqnbvXlR_ZEOvainXFR6SCVxt9kS9erP4PiDLHpzJLAEQM-lI5WLKp562abQKvn2XDB85CULtlNsKd_tgTdYbHhF5MPAxVscEXSZqRsfCvvqk_OtPi5uSWTzEq-X9qzgQTSbtYXxGCg2zXqUIXGV-YmQOmf9Co3UM2j6yZS86Uj9sMn_GTb2764-4AV-ibTkbp2nHuyq3BjtZxWtNOn84bsdmX1V_h1uvpM1jg7E9gtN_564'></script></head>
 <body>
   <div class="table">
     <div class="hud red" data-who="red"></div>
@@ -378,21 +381,22 @@
     function setAppHeight() {
       const vv = window.visualViewport;
       const h = vv ? vv.height : window.innerHeight;
-      root.style.setProperty("--app-h", Math.round(h) + "px");
+      root.style.setProperty("--app-h", Math.floor(h) + "px");
     }
 
     function fitBoard() {
-      const w = arenaEl.clientWidth - 30;
-      const h = arenaEl.clientHeight - 30;
+      const w = arenaEl.clientWidth;
+      const h = arenaEl.clientHeight;
       if (w < 80 || h < 80) return;
-      const cell = Math.max(14, Math.min(40, w / 7.7, h / 14.4));
+      const chrome = 36;
+      const cell = Math.max(13, Math.min(36, (w - chrome) / 7.9, (h - chrome) / 15.1));
       root.style.setProperty("--cell", cell.toFixed(2) + "px");
-      root.style.setProperty("--gap", Math.max(2, cell * 0.14).toFixed(2) + "px");
+      root.style.setProperty("--gap", Math.max(2, cell * 0.13).toFixed(2) + "px");
     }
 
     function layout() {
       setAppHeight();
-      fitBoard();
+      requestAnimationFrame(fitBoard);
     }
 
     document.querySelector(".table").addEventListener("click", (e) => {
@@ -408,7 +412,6 @@
     buildBoard();
     render();
     layout();
-    requestAnimationFrame(layout);
     window.addEventListener("resize", layout);
     if (window.visualViewport) window.visualViewport.addEventListener("resize", layout);
     window.addEventListener("orientationchange", () => setTimeout(layout, 250));
