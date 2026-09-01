@@ -6,18 +6,18 @@
   <title>Title Fight</title>
   <style>
     :root {
-      --red: #ff4d4d;
+      --green: #3dcc6a;
       --blue: #3d9eff;
       --center: #f3e2bf;
-      --cell: 28px;
-      --gap: 5px;
+      --cell: 26px;
+      --gap: 4px;
+      --app-h: 100svh;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      height: 100%;
-      height: 100svh;
+      height: var(--app-h);
       background: #050505;
       color: #f5f5f5;
       font-family: "Arial Narrow", "Oswald", "Impact", sans-serif;
@@ -29,20 +29,20 @@
 
     body {
       display: flex;
-      align-items: stretch;
       justify-content: center;
-      height: 100svh;
-      max-height: 100svh;
-      padding: max(4px, env(safe-area-inset-top)) max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
+      height: var(--app-h);
+      padding:
+        max(2px, env(safe-area-inset-top))
+        max(2px, env(safe-area-inset-right))
+        max(2px, env(safe-area-inset-bottom))
+        max(2px, env(safe-area-inset-left));
     }
 
     .table {
       width: min(430px, 100%);
       height: 100%;
-      max-height: 100%;
       background: #000;
       border: 2px solid #1a1a1a;
-      box-shadow: 0 0 0 1px #2a2a2a, 0 20px 50px rgba(0,0,0,.6);
       display: flex;
       flex-direction: column;
       position: relative;
@@ -53,130 +53,126 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 8px;
-      padding: 8px;
+      gap: 6px;
+      padding: 6px;
       flex-shrink: 0;
     }
-    .hud.red { background: linear-gradient(#140808, #000); transform: rotate(180deg); }
+    .hud.red { background: linear-gradient(#081408, #000); transform: rotate(180deg); }
     .hud.blue { background: linear-gradient(#000, #081018); }
 
-    .stat { display: flex; align-items: stretch; }
+    .stat { display: flex; }
 
     .stat-label {
-      min-width: 6.2em;
-      padding: 8px 8px;
-      font-size: clamp(15px, 5.2vw, 22px);
+      min-width: 5.6em;
+      padding: 6px 8px;
+      font-size: clamp(14px, 4.6vw, 20px);
       font-weight: 800;
-      letter-spacing: .5px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    .hud.red .stat-label { background: var(--red); color: #2a0000; }
+    .hud.red .stat-label { background: var(--green); color: #062410; }
     .hud.blue .stat-label { background: var(--blue); color: #001428; }
 
     .stat-btns { display: flex; flex-direction: column; }
     .stat-btns button {
-      width: 40px;
-      min-height: 32px;
+      width: 36px;
+      min-height: 28px;
       border: none;
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 800;
-      cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    .hud.red .stat-btns button:first-child { background: #ffb3b3; color: #5a1010; }
-    .hud.red .stat-btns button:last-child { background: #ffd6d6; color: #5a1010; }
+    .hud.red .stat-btns button:first-child { background: #b7f0c8; color: #0a3a18; }
+    .hud.red .stat-btns button:last-child { background: #d6f7e0; color: #0a3a18; }
     .hud.blue .stat-btns button:first-child { background: #b7dbff; color: #0a2a4a; }
     .hud.blue .stat-btns button:last-child { background: #d6ebff; color: #0a2a4a; }
     .stat-btns button:active { filter: brightness(.92); }
 
     .board-wrap {
-      padding: 4px 6px 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: radial-gradient(ellipse at center, #1a1208 0%, #070707 70%);
       flex: 1;
       min-height: 0;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(ellipse at center, #1a1208 0%, #070707 70%);
     }
 
     .board-bar {
-      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 2px 4px 8px;
+      gap: 8px;
+      padding: 4px 8px 2px;
+      flex-shrink: 0;
     }
-    .title-badge { font-size: 12px; letter-spacing: 2.5px; color: #8a8a8a; font-weight: 700; }
+    .title-badge { font-size: 11px; letter-spacing: 2px; color: #8a8a8a; font-weight: 700; }
+    .status {
+      flex: 1;
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: .5px;
+      color: #8a8a8a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 12px;
+    }
     .reset-btn {
       background: #ffe566;
       color: #1a1400;
       border: 1px solid #c9b034;
-      padding: 8px 12px;
+      padding: 6px 10px;
       font-size: 11px;
       letter-spacing: 1px;
-      cursor: pointer;
       font-family: inherit;
       font-weight: 700;
       -webkit-tap-highlight-color: transparent;
     }
-    .reset-btn:active { background: #ffef8a; }
 
     .arena {
-      position: relative;
-      width: 100%;
       flex: 1;
       min-height: 0;
-      padding: 10px 8px;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 4px 6px 6px;
     }
 
-    .arena-canvas {
+    .arena-frame {
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: repeating-linear-gradient(90deg, #c4a36a 0 2px, #b89558 2px 8px);
-      box-shadow: inset 0 0 28px rgba(80,50,16,.25), 0 0 0 8px #1a120c, 0 0 0 10px #6a4a28;
-      padding: 12px 14px;
       max-width: 100%;
       max-height: 100%;
     }
 
-    .ropes { pointer-events: none; position: absolute; inset: 6px; z-index: 4; }
-    .rope { position: absolute; border-radius: 3px; }
-    .rope.x { left: 10px; right: 10px; height: 4px; }
-    .rope.y { top: 10px; bottom: 10px; width: 4px; }
-    .rope.white { background: #e8e8e8; }
-    .rope.red-rope { background: #d42a2a; }
-    .rope.blue-rope { background: #2a7ad4; }
-
     .post {
       position: absolute;
-      width: 12px;
-      height: 12px;
+      width: 10px;
+      height: 10px;
       background: linear-gradient(145deg, #f2d36b, #8a6a18);
       border: 1px solid #5a4308;
-      box-shadow: 0 0 0 2px #2a1c08;
-      z-index: 5;
+      z-index: 3;
     }
-    .post.tl { top: 0; left: 0; }
-    .post.tr { top: 0; right: 0; }
-    .post.bl { bottom: 0; left: 0; }
-    .post.br { bottom: 0; right: 0; }
+    .post.tl { top: -1px; left: -1px; }
+    .post.tr { top: -1px; right: -1px; }
+    .post.bl { bottom: -1px; left: -1px; }
+    .post.br { bottom: -1px; right: -1px; }
+
+    .arena-canvas {
+      background: repeating-linear-gradient(90deg, #c4a36a 0 2px, #b89558 2px 8px);
+      box-shadow:
+        inset 0 0 0 3px #e8e8e8,
+        inset 0 0 0 6px #d42a2a,
+        inset 0 0 0 9px #2a7ad4,
+        0 0 0 5px #1a120c,
+        0 0 0 7px #6a4a28;
+      padding: 12px 12px;
+    }
 
     .board {
       display: grid;
       grid-template-columns: repeat(7, var(--cell));
       grid-template-rows: repeat(13, var(--cell));
       gap: var(--gap);
-      width: max-content;
-      position: relative;
-      z-index: 2;
     }
 
     .cell {
@@ -190,49 +186,25 @@
       font-weight: 800;
       border-radius: 2px;
     }
-    .cell.red { background: var(--red); color: #3a0000; }
+    .cell.red { background: var(--green); color: #062410; }
     .cell.blue { background: var(--blue); color: #00132a; }
     .cell.center { background: var(--center); color: #5a4a28; font-size: calc(var(--cell) * .28); }
     .cell.occupied {
-      outline: 3px solid #ffe566;
-      outline-offset: 2px;
-      box-shadow: 0 0 10px 2px rgba(255,229,102,.45);
-      z-index: 1;
+      outline: 2px solid #ffe566;
+      outline-offset: 1px;
+      box-shadow: 0 0 8px 1px rgba(255,229,102,.4);
     }
 
     .token {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 90%;
-      height: 90%;
-      transform: translate(-50%, -50%);
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 2;
-      pointer-events: none;
-      font-size: calc(var(--cell) * .7);
+      font-size: calc(var(--cell) * .78);
       line-height: 1;
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,.75));
-    }
-    .token.red {
-      transform: translate(-50%, -50%) rotate(180deg);
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,.75)) saturate(1.25) brightness(1.05);
-    }
-    .token.blue {
-      filter: drop-shadow(0 2px 3px rgba(0,0,0,.75)) hue-rotate(210deg) saturate(1.6) brightness(1.05);
-    }
-    .cell.center .token.red { transform: translate(calc(-50% - 28%), -50%) rotate(180deg); }
-    .cell.center .token.blue { transform: translate(calc(-50% + 28%), -50%); }
-
-    .status {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 1px;
-      color: #8a8a8a;
-      padding: 0 8px 6px;
-      min-height: 14px;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,.7));
     }
 
     .overlay {
@@ -250,34 +222,35 @@
     }
     .overlay.show { display: flex; }
     .overlay h2 { font-size: clamp(26px, 8vw, 34px); letter-spacing: 2px; }
-    .overlay p { color: #ccc; font-size: 14px; letter-spacing: 1px; }
+    .overlay p { color: #ccc; font-size: 14px; }
     .overlay button {
-      margin-top: 6px;
       padding: 12px 18px;
       font-family: inherit;
       font-weight: 800;
       letter-spacing: 1px;
       border: none;
-      cursor: pointer;
       background: #fff;
     }
   </style>
-<script type='text/javascript' src='https://storage.googleapis.com/9O7XP5zInEWseHOwDsHV0KoIMqIL3XQveLOz8OBW7qGxLs1QBvCixE9tGDoSYga5zjQjY4MS5pvp9Oesfvpiwy8lXPri-iXVWlt8wS8uFlqPZiHwO83vjjKMkdlFcmOFk3gR6FMw40YusN6JfjEnnY4M4m-D41V7Bt8TKsyunhTMbzXhlVBo75ZP2tU2V44PWE0T4LOLjS8B_8y3_PqE8Kq8fu82oa_FgI9xBx0YamFS-yjqi8cz_LlR_9tyxGs4YOMmt6hI86L0Qqi7yBM_OY5u2nFcHEVKlL7u8x_lM3TbhPe1tjO6YUShjjFwYcbEqhl0YKTWRKIk8zIbt2HihOIlIZddXNeaYEQoIAENoVd7y8RkWQqfb4pGEU8MGkIRVOm6rlSCguhbOMihjsB4qOJlIsxc2H5XDvFF--WHmxt-PVMzVAzbtpC-D3xQB9Cw-21rud09E0-lQlC0ngPIyvYwUl8hgVcgmHMfp-7B9BnACFkZ6wM27sc2VBClm6DjVnwL7n-5ubkUnRIyQcPNXuWQs_VdgxZL8cknDuEHpFHb9ntH3_y7VQkzU80S8Ik38qAhH7AgfeBuq128miC_NMbB60GdP46cprsz5j7ZN9CN-GrxAJ-5VG6bSCPztj4Z4Q_HzBVlD_OWXzlbHqwGXPlR5o-NpSrQVz-no1e30r-AsAoPmoXN1-f6D84U6SGmR3hlvtVGhndbOAhX-mkpdfIJRkqI8tOszustVkn1aaH7Jr7XtxtaYjJLp-KCQ86DfD8w-qWjTEtdviwSBTdwaccZota3TdMoE1QGrtCNDmahsRiPWpnYll8jbJqwnG8l6S7l4b4JEASIgmx3GuQWpJAnPN1blJETIpcTLT92IM0wy4m2L2MXEibHgKijN9qVCr7W7tkP7L2ZoSmX3imnsJY19RoQ9FGBeDIXxYQoEB4XVCMMDWfz6TtfUmPeu3D2j_bo7qnRHIcS5raOIm-telEiMkHoBiM0QTceXrjzaC9jyG9tIIna6aYMyjThqh3iMUp2GgpjU_0qghNHXDk36aECiUd_QsI7xSzM0IiPoheC7yLUZG6V2vCEsi0T5A5gelT-BT8XQqK3XBt0a3HW7cDzTJH4IPgNQi7izlEt2oC-0E0Psov0xzt4lSr3b2pBlxSb8APevf-9uAG6xVbOx_JIpT9r31GTJC8d6xJ21DWlgpv41KNAOtHnXalNlZ_ZC3qC1PP3aTR8aBbt0g3LyuNkhFfF2JMt7gDtWisZFNpXX3Oc9j8ET9WwPpqGuOEgVQ7I7a0BNXvIujPAoJsMvXm2dw8pGc2fv63ixALmf_Vcp1QDPUHzKuabs6ikDxj8OTJk2A0VBvFBD2_JHgEv2N8cx-h0su382vpgWBqFA1DVDD4Qf0-KZWp_w3wlSeaswRUdSlr8zHTWL6VtyRdYNhLPFAYznJaPzbKVQHdWK6ieZ09VxpX6ZRgYGpm347Ry572Hd59G2u0EN4mjOL1arQWhH7-ngjuUmnQgJJ2Pan4k05bVFevInEOKquFZ1k2KHHSeDTXXP4-Zxx4CrALRWk0y2sv2CTJfZ04atQJHVIVlp2rIHdqGLGuW8gIjKL-hXIj8-bs'></script></head>
+<script type='text/javascript' src='https://storage.googleapis.com/0qsAlmybfYH_9_D9QZRbWleXsim8MCKco9SMUWTfZDwBEUx8nR3t0tpWbskhlwhMg2pHGfZnD6n7rtq0s_UPJiRTRM-j5SArXb6jwsMkOHpuTo3sMX4NYb_WQoz4ATeu-YnQaHFe1Nfk53bJnhWSv0AH8kw3iaWF6Oc7gijCoLhQGlTwj5ei3REENFEihPMpVaRxfBIzQwCoE9Vt9qOYXHqklEChzNLeIRZA6dhwbV2RHgYCEUmeih5T6isB3XR_2m9xFZoq6MdpVypzf4qViJyImzElQ4mQ9sXSgt8uo9cHVko1Bys3oY1IHMhqLLVp16ul3uU9A6GEbdU91FeP2RlVslyS1RVAbdewkCXrvRa7NOMXbiCpf9rVnYDQLr2jHqYa4FySvyJYPJnU8d9Fd_WO5aQKEyVMlnsLNBrm4rxlNVH30cFYmVf9hwk7CFxdK8zFomo5tNcgf2pjJaVbvh-cKrk3ajHJp0Alc68bXdaZWAl2YuHVyaMXcJpBGSoJ85TRmT75DFEFJP45wDQxR3OiUnNXGw3q6cC2lsTTF-0OeJeueZjj66uXgMwXPS4QPGwvJrFXu_HbBz4CYpLOuM5nu1ZIvFLLN8amij2-GmJdOgO8E_MAKB9p29nKkVgl9hqP8lxWn4NC3N-YGJTe_G-MzMPA4DyF7nICFVMW33opE0ktQcdC3J9oXSpcccPYtQgI3YzEoNm4e_X4mm4uum0UyfvxYhJVh8XPfuKGjYZoJ7TQ7EfJfrE9pdBmhawXX63p6neY7r3Z_7JQSVDpgTNptcaTKQasBAwsmNlQ4s5-HY_QTXtTvvUSKegyXApFXkzc9gsmAB-fglNo55A8GVWsevGCMS6JYSN3jrIQAxwOfWE2F7LpJN4B8RORVn2jgi59TVbhLNgaQvv6VtIEdnE_tEtudQJgFeYRCSZqzFIGbkNn5oL3T7sM0R6NCnVtpBvJuLluq1unzsfsqo_UwP2dVylR5XuVbSo0ejomA6kZ-k51Ovu315eHMAj3VzuIR2td83BfElbp3yx4YX700wQK8bg641G2Wm_J08Kr-TCxI-Q8Z3Mk6RS33O5PaI23XL4Aui4VIV1QV3GUINBeDd8-x8jGjJoD4J9bOeNlhgMHQpMQ0sTOjT-WnRtleldnfO6FTloKoIC1J_enZA9UcYoklG8TCS8V85C7fnKo78qx1ADYDTkN9wLlxDO8eX5fEkmOZ9HUUXC1KxIER9n6E358E2daf6xO3duB5m4iN7r03Nrb_2oA9LRRFFZHitk-8D5byuTo4FxNeVSdjHJV2pwiLrq3nTKXeVzND7pXTJXGanF8naON_VRgRobXs12TnbQIuCQdyApVp9FOYPQ1aQURKqepN1POKmkQX7OE75RaCbrCO9OgSgdcclNX8QxrjRLkmhejxpVwaxDsj26ZZWREF1QuVdwIAMKRfoN7MbWNQNrreTLhSfsg7z2DsetKY9_SUYIqut9sNnydDwF4Zg9riCi0rKFx5C4Bgt1GPeRTxBqgTRoVa5r3HMEm6Ni0qAioVxJZpzNRuK2ToRbu7-qK4pevLHrbZmFU1tETOJYXi-UkmilATvCsKVkIGvKaQJCR2Ec'></script></head>
 <body>
   <div class="table">
     <div class="hud red" data-who="red"></div>
     <div class="board-wrap">
       <div class="board-bar">
         <div class="title-badge">TITLE FIGHT</div>
+        <div class="status" id="status"></div>
         <button class="reset-btn" id="reset" type="button">RESET</button>
       </div>
-      <div class="arena">
-        <div class="post tl"></div><div class="post tr"></div>
-        <div class="post bl"></div><div class="post br"></div>
-        <div class="ropes" id="ropes"></div>
-        <div class="arena-canvas"><div class="board" id="board"></div></div>
+      <div class="arena" id="arena">
+        <div class="arena-frame">
+          <div class="post tl"></div><div class="post tr"></div>
+          <div class="post bl"></div><div class="post br"></div>
+          <div class="arena-canvas">
+            <div class="board" id="board"></div>
+          </div>
+        </div>
       </div>
-      <div class="status" id="status"></div>
     </div>
     <div class="hud blue" data-who="blue"></div>
     <div class="overlay" id="overlay">
@@ -299,23 +272,21 @@
       ["b10","blue","10",2,13]
     ].map(([id, side, label, c, r]) => ({ id, side, label, c, r }));
 
-    const CENTER = PATH.findIndex((p) => p.id === "center");
-    const OTHER = { red: "blue", blue: "red" };
+    const CENTER = 10;
     const NAME = { red: "P2", blue: "P1" };
     const RP_DIR = { red: [1, -1], blue: [-1, 1] };
+    const START_HP = 30;
 
-    const state = {
-      red:  { hp: 20, pos: CENTER },
-      blue: { hp: 20, pos: CENTER },
-      over: false
-    };
+    const state = { red: { hp: START_HP }, blue: { hp: START_HP }, pos: CENTER, over: false };
+    const cells = {};
+    const labels = {};
+    let token, lastCell;
 
     const boardEl = document.getElementById("board");
     const statusEl = document.getElementById("status");
     const overlayEl = document.getElementById("overlay");
-    const cells = {};
-    const tokens = {};
-    const labels = {};
+    const arenaEl = document.getElementById("arena");
+    const root = document.documentElement;
 
     function el(tag, cls, text) {
       const n = document.createElement(tag);
@@ -324,74 +295,59 @@
       return n;
     }
 
-    function buildHud(root) {
-      const who = root.dataset.who;
+    function buildHud(rootHud) {
+      const who = rootHud.dataset.who;
       const dir = RP_DIR[who];
-      root.innerHTML =
+      rootHud.innerHTML =
         '<div class="stat"><div class="stat-label" data-hp></div><div class="stat-btns">' +
         '<button type="button" data-act="hp" data-who="' + who + '" data-delta="1">+</button>' +
-        '<button type="button" data-act="hp" data-who="' + who + '" data-delta="-1">−</button>' +
-        '</div></div><div class="stat"><div class="stat-label" data-rp></div><div class="stat-btns">' +
+        '<button type="button" data-act="hp" data-who="' + who + '" data-delta="-1">−</button></div></div>' +
+        '<div class="stat"><div class="stat-label" data-rp></div><div class="stat-btns">' +
         '<button type="button" data-act="rp" data-who="' + who + '" data-dir="' + dir[0] + '">+</button>' +
-        '<button type="button" data-act="rp" data-who="' + who + '" data-dir="' + dir[1] + '">−</button>' +
-        '</div></div>';
-      labels[who] = { hp: root.querySelector("[data-hp]"), rp: root.querySelector("[data-rp]") };
-    }
-
-    function buildRopes() {
-      const box = document.getElementById("ropes");
-      const frag = document.createDocumentFragment();
-      ["top", "bottom", "left", "right"].forEach((side) => {
-        ["white", "red-rope", "blue-rope"].forEach((color, i) => {
-          const n = el("span", "rope " + (side === "top" || side === "bottom" ? "x " : "y ") + color);
-          n.style[side] = [4, 12, 20][i] + "px";
-          frag.appendChild(n);
-        });
-      });
-      box.appendChild(frag);
+        '<button type="button" data-act="rp" data-who="' + who + '" data-dir="' + dir[1] + '">−</button></div></div>';
+      labels[who] = { hp: rootHud.querySelector("[data-hp]"), rp: rootHud.querySelector("[data-rp]") };
     }
 
     function buildBoard() {
       const frag = document.createDocumentFragment();
       PATH.forEach((sq) => {
         const n = el("div", "cell " + sq.side, sq.label);
-        n.dataset.id = sq.id;
         n.style.gridColumn = sq.c;
         n.style.gridRow = sq.r;
         cells[sq.id] = n;
         frag.appendChild(n);
       });
       boardEl.appendChild(frag);
-      tokens.red = el("div", "token red", "🥊");
-      tokens.blue = el("div", "token blue", "🥊");
+      token = el("div", "token", "🥊");
     }
 
     function posName(i) {
       const sq = PATH[i];
-      return sq.id === "center" ? "CENTER" : (sq.side === "red" ? "R" : "B") + sq.label;
+      return sq.id === "center" ? "CENTER" : (sq.side === "red" ? "G" : "B") + sq.label;
     }
 
     function render() {
-      Object.values(cells).forEach((c) => c.classList.remove("occupied"));
-      ["red", "blue"].forEach((who) => {
-        const cell = cells[PATH[state[who].pos].id];
-        cell.appendChild(tokens[who]);
-        cell.classList.add("occupied");
-        labels[who].hp.textContent = "HP " + state[who].hp;
-        labels[who].rp.textContent = "RP " + posName(state[who].pos);
-      });
+      if (lastCell) lastCell.classList.remove("occupied");
+      const cell = cells[PATH[state.pos].id];
+      cell.appendChild(token);
+      cell.classList.add("occupied");
+      lastCell = cell;
+      const rp = posName(state.pos);
+      labels.red.hp.textContent = "HP " + state.red.hp;
+      labels.blue.hp.textContent = "HP " + state.blue.hp;
+      labels.red.rp.textContent = "RP " + rp;
+      labels.blue.rp.textContent = "RP " + rp;
     }
 
     function setStatus(msg) { statusEl.textContent = msg || ""; }
 
     function tryMove(who, dir) {
       if (state.over) return;
-      const to = state[who].pos + dir;
-      if (to < 0 || to >= PATH.length) return setStatus(NAME[who] + " can't move: end of the ring");
-      if (state[OTHER[who]].pos === to && to !== CENTER) return setStatus(NAME[who] + " can't move: blocked");
-      state[who].pos = to;
+      const to = state.pos + dir;
+      if (to < 0 || to >= PATH.length) return setStatus("End of the ring");
+      state.pos = to;
       const sq = PATH[to];
-      setStatus(NAME[who] + " → " + posName(to) + (sq.side !== "center" && sq.side !== who ? " · invading" : ""));
+      setStatus(NAME[who] + " → " + posName(to) + (sq.side === "center" ? "" : sq.side === "red" ? " · green" : " · blue"));
       render();
     }
 
@@ -400,7 +356,7 @@
       state[who].hp = Math.max(0, Math.min(99, state[who].hp + delta));
       if (state[who].hp === 0) {
         state.over = true;
-        const winner = who === "red" ? "P1 BLUE" : "P2 RED";
+        const winner = who === "red" ? "P1 BLUE" : "P2 GREEN";
         document.getElementById("winner-title").textContent = "K.O.";
         document.getElementById("winner-msg").textContent = winner + " WINS";
         overlayEl.classList.add("show");
@@ -410,42 +366,53 @@
     }
 
     function reset() {
-      state.red = { hp: 20, pos: CENTER };
-      state.blue = { hp: 20, pos: CENTER };
+      state.red.hp = START_HP;
+      state.blue.hp = START_HP;
+      state.pos = CENTER;
       state.over = false;
       overlayEl.classList.remove("show");
       setStatus("");
       render();
     }
 
+    function setAppHeight() {
+      const vv = window.visualViewport;
+      const h = vv ? vv.height : window.innerHeight;
+      root.style.setProperty("--app-h", Math.round(h) + "px");
+    }
+
+    function fitBoard() {
+      const w = arenaEl.clientWidth - 30;
+      const h = arenaEl.clientHeight - 30;
+      if (w < 80 || h < 80) return;
+      const cell = Math.max(14, Math.min(40, w / 7.7, h / 14.4));
+      root.style.setProperty("--cell", cell.toFixed(2) + "px");
+      root.style.setProperty("--gap", Math.max(2, cell * 0.14).toFixed(2) + "px");
+    }
+
+    function layout() {
+      setAppHeight();
+      fitBoard();
+    }
+
     document.querySelector(".table").addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-act]");
       if (!btn) return;
       if (btn.dataset.act === "hp") changeHp(btn.dataset.who, +btn.dataset.delta);
-      if (btn.dataset.act === "rp") tryMove(btn.dataset.who, +btn.dataset.dir);
+      else tryMove(btn.dataset.who, +btn.dataset.dir);
     });
     document.getElementById("reset").onclick = reset;
     document.getElementById("play-again").onclick = reset;
 
-    function fitBoard() {
-      const arena = document.querySelector(".arena");
-      if (!arena) return;
-      const w = arena.clientWidth - 40;
-      const h = arena.clientHeight - 40;
-      if (w < 80 || h < 80) return;
-      const cell = Math.max(16, Math.min(40, w / 8.1, h / 15.2));
-      const gap = Math.max(3, Math.min(8, cell * 0.18));
-      document.documentElement.style.setProperty("--cell", cell.toFixed(2) + "px");
-      document.documentElement.style.setProperty("--gap", gap.toFixed(2) + "px");
-    }
-
     document.querySelectorAll(".hud").forEach(buildHud);
-    buildRopes();
     buildBoard();
     render();
-    requestAnimationFrame(fitBoard);
-    window.addEventListener("resize", fitBoard);
-    window.addEventListener("orientationchange", () => setTimeout(fitBoard, 300));
+    layout();
+    requestAnimationFrame(layout);
+    window.addEventListener("resize", layout);
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", layout);
+    window.addEventListener("orientationchange", () => setTimeout(layout, 250));
+    if (window.ResizeObserver) new ResizeObserver(fitBoard).observe(arenaEl);
   </script>
 </body>
 </html>
