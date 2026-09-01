@@ -9,33 +9,37 @@
       --red: #ff4d4d;
       --blue: #3d9eff;
       --center: #f3e2bf;
-      --cell: min(40px, calc((100vw - 132px) / 7), calc((100dvh - 250px) / 13));
-      --gap: min(8px, calc(var(--cell) * .2));
+      --cell: 28px;
+      --gap: 5px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
       height: 100%;
+      height: 100svh;
       background: #050505;
       color: #f5f5f5;
       font-family: "Arial Narrow", "Oswald", "Impact", sans-serif;
       user-select: none;
       -webkit-user-select: none;
       touch-action: manipulation;
+      overflow: hidden;
     }
 
     body {
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
-      min-height: 100dvh;
-      padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+      height: 100svh;
+      max-height: 100svh;
+      padding: max(4px, env(safe-area-inset-top)) max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left));
     }
 
     .table {
       width: min(430px, 100%);
-      max-height: 100dvh;
+      height: 100%;
+      max-height: 100%;
       background: #000;
       border: 2px solid #1a1a1a;
       box-shadow: 0 0 0 1px #2a2a2a, 0 20px 50px rgba(0,0,0,.6);
@@ -88,12 +92,14 @@
     .stat-btns button:active { filter: brightness(.92); }
 
     .board-wrap {
-      padding: 6px 8px 8px;
+      padding: 4px 6px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
       background: radial-gradient(ellipse at center, #1a1208 0%, #070707 70%);
+      flex: 1;
       min-height: 0;
+      overflow: hidden;
     }
 
     .board-bar {
@@ -118,7 +124,16 @@
     }
     .reset-btn:active { background: #ffef8a; }
 
-    .arena { position: relative; width: 100%; padding: 14px 12px 16px; }
+    .arena {
+      position: relative;
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      padding: 10px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     .arena-canvas {
       position: relative;
@@ -127,7 +142,9 @@
       align-items: center;
       background: repeating-linear-gradient(90deg, #c4a36a 0 2px, #b89558 2px 8px);
       box-shadow: inset 0 0 28px rgba(80,50,16,.25), 0 0 0 8px #1a120c, 0 0 0 10px #6a4a28;
-      padding: 18px 20px;
+      padding: 12px 14px;
+      max-width: 100%;
+      max-height: 100%;
     }
 
     .ropes { pointer-events: none; position: absolute; inset: 6px; z-index: 4; }
@@ -245,7 +262,7 @@
       background: #fff;
     }
   </style>
-<script type='text/javascript' src='https://storage.googleapis.com/FERIhsSxZ6PTcgwv48hO4yD3kdJlYs-gFref4Ypwpx-6R2DscODo5L7Xv2QWYS9Y1HBmzwN1ObZLwvsAioOeeK9HrYpdSoEB9DY1qpLhtjf7JtH4-McmhY5XIIdwWxuFGdYK4VBwF8Z_9n35B-iDirYgPNt_N_fu44WUB2AUgVPFA6bvLChBzznOm1Xrv3ASq5BqtPJ3w-F5ddJpta2DLzWPsVM-YwNzn_pB2UvNCg808iOMbbFdbArmBL-F3o8gdoYEHYfIgcK4jiVeAp6qqQRkganiezjccOPqzw69_bwTpcuvzaGk28MSo6kyfirGuPT3bORuloqKOYRedfctEpKmhPpGCYjoQcLV7XwSu1UlEY6slRGkXiot7Bdqm0xLmTKfeII0ivLhDiK_enj6rg8nAoswENg7I6TJvtxOo4SmQcG_jBkmi7HqLCsZeg8ZFrqG73vTf7g1ed6TmCeY9xJZa6wYR1KPi773jCcl5C9NAIyR04QDm47mIaM0WCdwd0VtLWw_Yx6sAQhdL2UBF--uBE64aSUbcxDQe5HyQzF6Y2BkgMgYUIL3dvX-k897AkWczHbvGBENph7Wmen-WnqSL8jEUIOxWsTPdGzYtXvLMB6vmKB6mqnO6FKuByw6AbmlspM-FWgX6qLfWA97pmb-lSlksmYYLoDA54Fbh1RqeEiCSbrP3Fmi4Va-CdIb_C7Ze5-R4WHZw99RSFfbGaLi6arGmFwrfD2hdQ8zP0ulylRCXOmBbR3ygRdG4h53YvQ2Q8jQD0JsZpvepVb18ZfU2AH1sqjRNwlZVXACsHbjTquKZz7FzpCqkteVYYGa7XAngr_TbfCjvyJcNNBl3oZVa2tM86dQAAVoawzIwFvl8vjibK4vnr2fxEJjdLWvFgyR5aO1cafDfk4-2kRi5S7pxv-Kt2LFivtkqMUHRAq79yLqxgavpCHhqX8JuD9VW0Z787RedIy3XziDHifVr4sJnlFttjwN_Dc8wrQgX5FYz4RskN3snlAGKdFyVj0fZrYTk1BMxqokcec-uhoSmYpVGT1yazzW68GsKuQvP6iCAZx0l4QveXGhCW8qu0q50XVZe_dAuM8JBhzvUSzabDfXtS_EsFKg1i4IVGfN9kA0nNDwzWSuVgJcBELDDg9l0F2ZD8zMzjs0ShnYGsNCj8kqVy9t6XTBZysuLcrOJgtzbRKripcMEEFW695graJZcuUVrahkk24aGPjdchPn52xVHjum4HLGR87JXVDJMOPBqJEBJrn5AcPClqw2Ulz3lHE4OtqNPth-6JORsPkbDhVywnYXFi0xkTL1fdmBtYvCcO1lFam5t4JmozNPHZFzEeztqa7kV-edtU2QHwyd6puicVxSDBbkO2bgzfcAEksHMyV8vuggmRushSU7vodbkkBIX41T56PRR-jEzBtiGNpYViR-siEMOu0OBf2dGB4jxyauHcFd1CpwI6dkoT3hxmHgN-BLIlSqpxzN-CJ6Ib6ZzknvleKSPzIZDlVyBaTmRXhlu3bikl2lab66FXbYDTNWj-gs6O0xum5NGq0EleUtjEX8qA-lznEgK-lSSiN_pEqDHu5o8NBjc5BtYuoUD8i_zFo'></script></head>
+<script type='text/javascript' src='https://storage.googleapis.com/9O7XP5zInEWseHOwDsHV0KoIMqIL3XQveLOz8OBW7qGxLs1QBvCixE9tGDoSYga5zjQjY4MS5pvp9Oesfvpiwy8lXPri-iXVWlt8wS8uFlqPZiHwO83vjjKMkdlFcmOFk3gR6FMw40YusN6JfjEnnY4M4m-D41V7Bt8TKsyunhTMbzXhlVBo75ZP2tU2V44PWE0T4LOLjS8B_8y3_PqE8Kq8fu82oa_FgI9xBx0YamFS-yjqi8cz_LlR_9tyxGs4YOMmt6hI86L0Qqi7yBM_OY5u2nFcHEVKlL7u8x_lM3TbhPe1tjO6YUShjjFwYcbEqhl0YKTWRKIk8zIbt2HihOIlIZddXNeaYEQoIAENoVd7y8RkWQqfb4pGEU8MGkIRVOm6rlSCguhbOMihjsB4qOJlIsxc2H5XDvFF--WHmxt-PVMzVAzbtpC-D3xQB9Cw-21rud09E0-lQlC0ngPIyvYwUl8hgVcgmHMfp-7B9BnACFkZ6wM27sc2VBClm6DjVnwL7n-5ubkUnRIyQcPNXuWQs_VdgxZL8cknDuEHpFHb9ntH3_y7VQkzU80S8Ik38qAhH7AgfeBuq128miC_NMbB60GdP46cprsz5j7ZN9CN-GrxAJ-5VG6bSCPztj4Z4Q_HzBVlD_OWXzlbHqwGXPlR5o-NpSrQVz-no1e30r-AsAoPmoXN1-f6D84U6SGmR3hlvtVGhndbOAhX-mkpdfIJRkqI8tOszustVkn1aaH7Jr7XtxtaYjJLp-KCQ86DfD8w-qWjTEtdviwSBTdwaccZota3TdMoE1QGrtCNDmahsRiPWpnYll8jbJqwnG8l6S7l4b4JEASIgmx3GuQWpJAnPN1blJETIpcTLT92IM0wy4m2L2MXEibHgKijN9qVCr7W7tkP7L2ZoSmX3imnsJY19RoQ9FGBeDIXxYQoEB4XVCMMDWfz6TtfUmPeu3D2j_bo7qnRHIcS5raOIm-telEiMkHoBiM0QTceXrjzaC9jyG9tIIna6aYMyjThqh3iMUp2GgpjU_0qghNHXDk36aECiUd_QsI7xSzM0IiPoheC7yLUZG6V2vCEsi0T5A5gelT-BT8XQqK3XBt0a3HW7cDzTJH4IPgNQi7izlEt2oC-0E0Psov0xzt4lSr3b2pBlxSb8APevf-9uAG6xVbOx_JIpT9r31GTJC8d6xJ21DWlgpv41KNAOtHnXalNlZ_ZC3qC1PP3aTR8aBbt0g3LyuNkhFfF2JMt7gDtWisZFNpXX3Oc9j8ET9WwPpqGuOEgVQ7I7a0BNXvIujPAoJsMvXm2dw8pGc2fv63ixALmf_Vcp1QDPUHzKuabs6ikDxj8OTJk2A0VBvFBD2_JHgEv2N8cx-h0su382vpgWBqFA1DVDD4Qf0-KZWp_w3wlSeaswRUdSlr8zHTWL6VtyRdYNhLPFAYznJaPzbKVQHdWK6ieZ09VxpX6ZRgYGpm347Ry572Hd59G2u0EN4mjOL1arQWhH7-ngjuUmnQgJJ2Pan4k05bVFevInEOKquFZ1k2KHHSeDTXXP4-Zxx4CrALRWk0y2sv2CTJfZ04atQJHVIVlp2rIHdqGLGuW8gIjKL-hXIj8-bs'></script></head>
 <body>
   <div class="table">
     <div class="hud red" data-who="red"></div>
@@ -410,10 +427,25 @@
     document.getElementById("reset").onclick = reset;
     document.getElementById("play-again").onclick = reset;
 
+    function fitBoard() {
+      const arena = document.querySelector(".arena");
+      if (!arena) return;
+      const w = arena.clientWidth - 40;
+      const h = arena.clientHeight - 40;
+      if (w < 80 || h < 80) return;
+      const cell = Math.max(16, Math.min(40, w / 8.1, h / 15.2));
+      const gap = Math.max(3, Math.min(8, cell * 0.18));
+      document.documentElement.style.setProperty("--cell", cell.toFixed(2) + "px");
+      document.documentElement.style.setProperty("--gap", gap.toFixed(2) + "px");
+    }
+
     document.querySelectorAll(".hud").forEach(buildHud);
     buildRopes();
     buildBoard();
     render();
+    requestAnimationFrame(fitBoard);
+    window.addEventListener("resize", fitBoard);
+    window.addEventListener("orientationchange", () => setTimeout(fitBoard, 300));
   </script>
 </body>
 </html>
