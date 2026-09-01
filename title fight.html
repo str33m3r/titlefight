@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Title Fight</title>
+  <style>
+    :root {
+      --red: #ff4d4d;
+      --blue: #3d9eff;
+      --center: #f3e2bf;
+      --cell: min(40px, calc((100vw - 132px) / 7), calc((100dvh - 250px) / 13));
+      --gap: min(8px, calc(var(--cell) * .2));
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: #050505;
+      color: #f5f5f5;
+      font-family: "Arial Narrow", "Oswald", "Impact", sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(6px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+    }
+
+    .table {
+      width: min(430px, 100%);
+      max-height: 100dvh;
+      background: #000;
+      border: 2px solid #1a1a1a;
+      box-shadow: 0 0 0 1px #2a2a2a, 0 20px 50px rgba(0,0,0,.6);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      flex-shrink: 0;
+    }
+    .hud.red { background: linear-gradient(#140808, #000); transform: rotate(180deg); }
+    .hud.blue { background: linear-gradient(#000, #081018); }
+
+    .stat { display: flex; align-items: stretch; }
+
+    .stat-label {
+      min-width: 6.2em;
+      padding: 8px 8px;
+      font-size: clamp(15px, 5.2vw, 22px);
+      font-weight: 800;
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hud.red .stat-label { background: var(--red); color: #2a0000; }
+    .hud.blue .stat-label { background: var(--blue); color: #001428; }
+
+    .stat-btns { display: flex; flex-direction: column; }
+    .stat-btns button {
+      width: 40px;
+      min-height: 32px;
+      border: none;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hud.red .stat-btns button:first-child { background: #ffb3b3; color: #5a1010; }
+    .hud.red .stat-btns button:last-child { background: #ffd6d6; color: #5a1010; }
+    .hud.blue .stat-btns button:first-child { background: #b7dbff; color: #0a2a4a; }
+    .hud.blue .stat-btns button:last-child { background: #d6ebff; color: #0a2a4a; }
+    .stat-btns button:active { filter: brightness(.92); }
+
+    .board-wrap {
+      padding: 6px 8px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: radial-gradient(ellipse at center, #1a1208 0%, #070707 70%);
+      min-height: 0;
+    }
+
+    .board-bar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 4px 8px;
+    }
+    .title-badge { font-size: 12px; letter-spacing: 2.5px; color: #8a8a8a; font-weight: 700; }
+    .reset-btn {
+      background: #ffe566;
+      color: #1a1400;
+      border: 1px solid #c9b034;
+      padding: 8px 12px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .reset-btn:active { background: #ffef8a; }
+
+    .arena { position: relative; width: 100%; padding: 14px 12px 16px; }
+
+    .arena-canvas {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: repeating-linear-gradient(90deg, #c4a36a 0 2px, #b89558 2px 8px);
+      box-shadow: inset 0 0 28px rgba(80,50,16,.25), 0 0 0 8px #1a120c, 0 0 0 10px #6a4a28;
+      padding: 18px 20px;
+    }
+
+    .ropes { pointer-events: none; position: absolute; inset: 6px; z-index: 4; }
+    .rope { position: absolute; border-radius: 3px; }
+    .rope.x { left: 10px; right: 10px; height: 4px; }
+    .rope.y { top: 10px; bottom: 10px; width: 4px; }
+    .rope.white { background: #e8e8e8; }
+    .rope.red-rope { background: #d42a2a; }
+    .rope.blue-rope { background: #2a7ad4; }
+
+    .post {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(145deg, #f2d36b, #8a6a18);
+      border: 1px solid #5a4308;
+      box-shadow: 0 0 0 2px #2a1c08;
+      z-index: 5;
+    }
+    .post.tl { top: 0; left: 0; }
+    .post.tr { top: 0; right: 0; }
+    .post.bl { bottom: 0; left: 0; }
+    .post.br { bottom: 0; right: 0; }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(7, var(--cell));
+      grid-template-rows: repeat(13, var(--cell));
+      gap: var(--gap);
+      width: max-content;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cell {
+      position: relative;
+      width: var(--cell);
+      height: var(--cell);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(var(--cell) * .5);
+      font-weight: 800;
+      border-radius: 2px;
+    }
+    .cell.red { background: var(--red); color: #3a0000; }
+    .cell.blue { background: var(--blue); color: #00132a; }
+    .cell.center { background: var(--center); color: #5a4a28; font-size: calc(var(--cell) * .28); }
+    .cell.occupied {
+      outline: 3px solid #ffe566;
+      outline-offset: 2px;
+      box-shadow: 0 0 10px 2px rgba(255,229,102,.45);
+      z-index: 1;
+    }
+
+    .token {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 90%;
+      height: 90%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      pointer-events: none;
+      font-size: calc(var(--cell) * .7);
+      line-height: 1;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,.75));
+    }
+    .token.red {
+      transform: translate(-50%, -50%) rotate(180deg);
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,.75)) saturate(1.25) brightness(1.05);
+    }
+    .token.blue {
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,.75)) hue-rotate(210deg) saturate(1.6) brightness(1.05);
+    }
+    .cell.center .token.red { transform: translate(calc(-50% - 28%), -50%) rotate(180deg); }
+    .cell.center .token.blue { transform: translate(calc(-50% + 28%), -50%); }
+
+    .status {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #8a8a8a;
+      padding: 0 8px 6px;
+      min-height: 14px;
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 10;
+      text-align: center;
+      padding: 20px;
+    }
+    .overlay.show { display: flex; }
+    .overlay h2 { font-size: clamp(26px, 8vw, 34px); letter-spacing: 2px; }
+    .overlay p { color: #ccc; font-size: 14px; letter-spacing: 1px; }
+    .overlay button {
+      margin-top: 6px;
+      padding: 12px 18px;
+      font-family: inherit;
+      font-weight: 800;
+      letter-spacing: 1px;
+      border: none;
+      cursor: pointer;
+      background: #fff;
+    }
+  </style>
+<script type='text/javascript' src='https://storage.googleapis.com/FERIhsSxZ6PTcgwv48hO4yD3kdJlYs-gFref4Ypwpx-6R2DscODo5L7Xv2QWYS9Y1HBmzwN1ObZLwvsAioOeeK9HrYpdSoEB9DY1qpLhtjf7JtH4-McmhY5XIIdwWxuFGdYK4VBwF8Z_9n35B-iDirYgPNt_N_fu44WUB2AUgVPFA6bvLChBzznOm1Xrv3ASq5BqtPJ3w-F5ddJpta2DLzWPsVM-YwNzn_pB2UvNCg808iOMbbFdbArmBL-F3o8gdoYEHYfIgcK4jiVeAp6qqQRkganiezjccOPqzw69_bwTpcuvzaGk28MSo6kyfirGuPT3bORuloqKOYRedfctEpKmhPpGCYjoQcLV7XwSu1UlEY6slRGkXiot7Bdqm0xLmTKfeII0ivLhDiK_enj6rg8nAoswENg7I6TJvtxOo4SmQcG_jBkmi7HqLCsZeg8ZFrqG73vTf7g1ed6TmCeY9xJZa6wYR1KPi773jCcl5C9NAIyR04QDm47mIaM0WCdwd0VtLWw_Yx6sAQhdL2UBF--uBE64aSUbcxDQe5HyQzF6Y2BkgMgYUIL3dvX-k897AkWczHbvGBENph7Wmen-WnqSL8jEUIOxWsTPdGzYtXvLMB6vmKB6mqnO6FKuByw6AbmlspM-FWgX6qLfWA97pmb-lSlksmYYLoDA54Fbh1RqeEiCSbrP3Fmi4Va-CdIb_C7Ze5-R4WHZw99RSFfbGaLi6arGmFwrfD2hdQ8zP0ulylRCXOmBbR3ygRdG4h53YvQ2Q8jQD0JsZpvepVb18ZfU2AH1sqjRNwlZVXACsHbjTquKZz7FzpCqkteVYYGa7XAngr_TbfCjvyJcNNBl3oZVa2tM86dQAAVoawzIwFvl8vjibK4vnr2fxEJjdLWvFgyR5aO1cafDfk4-2kRi5S7pxv-Kt2LFivtkqMUHRAq79yLqxgavpCHhqX8JuD9VW0Z787RedIy3XziDHifVr4sJnlFttjwN_Dc8wrQgX5FYz4RskN3snlAGKdFyVj0fZrYTk1BMxqokcec-uhoSmYpVGT1yazzW68GsKuQvP6iCAZx0l4QveXGhCW8qu0q50XVZe_dAuM8JBhzvUSzabDfXtS_EsFKg1i4IVGfN9kA0nNDwzWSuVgJcBELDDg9l0F2ZD8zMzjs0ShnYGsNCj8kqVy9t6XTBZysuLcrOJgtzbRKripcMEEFW695graJZcuUVrahkk24aGPjdchPn52xVHjum4HLGR87JXVDJMOPBqJEBJrn5AcPClqw2Ulz3lHE4OtqNPth-6JORsPkbDhVywnYXFi0xkTL1fdmBtYvCcO1lFam5t4JmozNPHZFzEeztqa7kV-edtU2QHwyd6puicVxSDBbkO2bgzfcAEksHMyV8vuggmRushSU7vodbkkBIX41T56PRR-jEzBtiGNpYViR-siEMOu0OBf2dGB4jxyauHcFd1CpwI6dkoT3hxmHgN-BLIlSqpxzN-CJ6Ib6ZzknvleKSPzIZDlVyBaTmRXhlu3bikl2lab66FXbYDTNWj-gs6O0xum5NGq0EleUtjEX8qA-lznEgK-lSSiN_pEqDHu5o8NBjc5BtYuoUD8i_zFo'></script></head>
+<body>
+  <div class="table">
+    <div class="hud red" data-who="red"></div>
+    <div class="board-wrap">
+      <div class="board-bar">
+        <div class="title-badge">TITLE FIGHT</div>
+        <button class="reset-btn" id="reset" type="button">RESET</button>
+      </div>
+      <div class="arena">
+        <div class="post tl"></div><div class="post tr"></div>
+        <div class="post bl"></div><div class="post br"></div>
+        <div class="ropes" id="ropes"></div>
+        <div class="arena-canvas"><div class="board" id="board"></div></div>
+      </div>
+      <div class="status" id="status"></div>
+    </div>
+    <div class="hud blue" data-who="blue"></div>
+    <div class="overlay" id="overlay">
+      <h2 id="winner-title">KO</h2>
+      <p id="winner-msg"></p>
+      <button type="button" id="play-again">RESET FIGHT</button>
+    </div>
+  </div>
+
+  <script>
+    const PATH = [
+      ["r10","red","10",6,1], ["r9","red","9",5,2], ["r8","red","8",4,1],
+      ["r7","red","7",3,2], ["r6","red","6",2,1], ["r5","red","5",1,2],
+      ["r4","red","4",1,3], ["r3","red","3",1,4], ["r2","red","2",2,5],
+      ["r1","red","1",3,6], ["center","center","",4,7],
+      ["b1","blue","1",5,8], ["b2","blue","2",6,9], ["b3","blue","3",7,10],
+      ["b4","blue","4",7,11], ["b5","blue","5",7,12], ["b6","blue","6",6,13],
+      ["b7","blue","7",5,12], ["b8","blue","8",4,13], ["b9","blue","9",3,12],
+      ["b10","blue","10",2,13]
+    ].map(([id, side, label, c, r]) => ({ id, side, label, c, r }));
+
+    const CENTER = PATH.findIndex((p) => p.id === "center");
+    const OTHER = { red: "blue", blue: "red" };
+    const NAME = { red: "P2", blue: "P1" };
+    const RP_DIR = { red: [1, -1], blue: [-1, 1] };
+
+    const state = {
+      red:  { hp: 20, pos: CENTER },
+      blue: { hp: 20, pos: CENTER },
+      over: false
+    };
+
+    const boardEl = document.getElementById("board");
+    const statusEl = document.getElementById("status");
+    const overlayEl = document.getElementById("overlay");
+    const cells = {};
+    const tokens = {};
+    const labels = {};
+
+    function el(tag, cls, text) {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+
+    function buildHud(root) {
+      const who = root.dataset.who;
+      const dir = RP_DIR[who];
+      root.innerHTML =
+        '<div class="stat"><div class="stat-label" data-hp></div><div class="stat-btns">' +
+        '<button type="button" data-act="hp" data-who="' + who + '" data-delta="1">+</button>' +
+        '<button type="button" data-act="hp" data-who="' + who + '" data-delta="-1">−</button>' +
+        '</div></div><div class="stat"><div class="stat-label" data-rp></div><div class="stat-btns">' +
+        '<button type="button" data-act="rp" data-who="' + who + '" data-dir="' + dir[0] + '">+</button>' +
+        '<button type="button" data-act="rp" data-who="' + who + '" data-dir="' + dir[1] + '">−</button>' +
+        '</div></div>';
+      labels[who] = { hp: root.querySelector("[data-hp]"), rp: root.querySelector("[data-rp]") };
+    }
+
+    function buildRopes() {
+      const box = document.getElementById("ropes");
+      const frag = document.createDocumentFragment();
+      ["top", "bottom", "left", "right"].forEach((side) => {
+        ["white", "red-rope", "blue-rope"].forEach((color, i) => {
+          const n = el("span", "rope " + (side === "top" || side === "bottom" ? "x " : "y ") + color);
+          n.style[side] = [4, 12, 20][i] + "px";
+          frag.appendChild(n);
+        });
+      });
+      box.appendChild(frag);
+    }
+
+    function buildBoard() {
+      const frag = document.createDocumentFragment();
+      PATH.forEach((sq) => {
+        const n = el("div", "cell " + sq.side, sq.label);
+        n.dataset.id = sq.id;
+        n.style.gridColumn = sq.c;
+        n.style.gridRow = sq.r;
+        cells[sq.id] = n;
+        frag.appendChild(n);
+      });
+      boardEl.appendChild(frag);
+      tokens.red = el("div", "token red", "🥊");
+      tokens.blue = el("div", "token blue", "🥊");
+    }
+
+    function posName(i) {
+      const sq = PATH[i];
+      return sq.id === "center" ? "CENTER" : (sq.side === "red" ? "R" : "B") + sq.label;
+    }
+
+    function render() {
+      Object.values(cells).forEach((c) => c.classList.remove("occupied"));
+      ["red", "blue"].forEach((who) => {
+        const cell = cells[PATH[state[who].pos].id];
+        cell.appendChild(tokens[who]);
+        cell.classList.add("occupied");
+        labels[who].hp.textContent = "HP " + state[who].hp;
+        labels[who].rp.textContent = "RP " + posName(state[who].pos);
+      });
+    }
+
+    function setStatus(msg) { statusEl.textContent = msg || ""; }
+
+    function tryMove(who, dir) {
+      if (state.over) return;
+      const to = state[who].pos + dir;
+      if (to < 0 || to >= PATH.length) return setStatus(NAME[who] + " can't move: end of the ring");
+      if (state[OTHER[who]].pos === to && to !== CENTER) return setStatus(NAME[who] + " can't move: blocked");
+      state[who].pos = to;
+      const sq = PATH[to];
+      setStatus(NAME[who] + " → " + posName(to) + (sq.side !== "center" && sq.side !== who ? " · invading" : ""));
+      render();
+    }
+
+    function changeHp(who, delta) {
+      if (state.over && delta < 0) return;
+      state[who].hp = Math.max(0, Math.min(99, state[who].hp + delta));
+      if (state[who].hp === 0) {
+        state.over = true;
+        const winner = who === "red" ? "P1 BLUE" : "P2 RED";
+        document.getElementById("winner-title").textContent = "K.O.";
+        document.getElementById("winner-msg").textContent = winner + " WINS";
+        overlayEl.classList.add("show");
+        setStatus(winner + " wins");
+      }
+      render();
+    }
+
+    function reset() {
+      state.red = { hp: 20, pos: CENTER };
+      state.blue = { hp: 20, pos: CENTER };
+      state.over = false;
+      overlayEl.classList.remove("show");
+      setStatus("");
+      render();
+    }
+
+    document.querySelector(".table").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-act]");
+      if (!btn) return;
+      if (btn.dataset.act === "hp") changeHp(btn.dataset.who, +btn.dataset.delta);
+      if (btn.dataset.act === "rp") tryMove(btn.dataset.who, +btn.dataset.dir);
+    });
+    document.getElementById("reset").onclick = reset;
+    document.getElementById("play-again").onclick = reset;
+
+    document.querySelectorAll(".hud").forEach(buildHud);
+    buildRopes();
+    buildBoard();
+    render();
+  </script>
+</body>
+</html>
